@@ -105,8 +105,10 @@ export default function CartDrawer({
         }),
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'فشل إتمام طلبك. يرجى المحاولة مرة أخرى.');
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data?.order) {
+        throw new Error(data?.error || 'فشل إتمام طلبك. يرجى المحاولة مرة أخرى.');
+      }
 
       setCreatedOrder(data.order);
       onCheckoutComplete(data.order);
